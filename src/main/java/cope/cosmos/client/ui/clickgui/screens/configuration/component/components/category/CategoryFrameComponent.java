@@ -49,6 +49,7 @@ public class CategoryFrameComponent extends FrameComponent<Category> implements 
     // WHAT THE BLOOP
     private final JFrame frame = new JFrame();
 
+
     public CategoryFrameComponent(Category value, Vec2f position) {
         super(value, position);
 
@@ -65,26 +66,42 @@ public class CategoryFrameComponent extends FrameComponent<Category> implements 
         }
     }
 
+    private float calculateHeight() {
+        long categoryModuleCount = moduleComponents.stream()
+                .filter(moduleComponent -> moduleComponent.getModule() != null)
+                .count();
+        return categoryModuleCount * ModuleComponent.HEIGHT;
+    }
+
     @Override
     public void drawComponent() {
-        // expand height
         if (open) {
+            height = calculateHeight();
+
             long interactingWindows = getGUI().getCategoryFrameComponents()
                     .stream()
                     .filter(categoryFrameComponent -> !categoryFrameComponent.equals(this))
                     .filter(categoryFrameComponent -> categoryFrameComponent.isExpanding() || categoryFrameComponent.isDragging())
                     .count();
 
-            if (interactingWindows <= 0) {
-                if (isMouseOver(getPosition().x, getPosition().y + TITLE + height + 2, WIDTH, 4) && getMouse().isLeftHeld()) {
+            if (interactingWindows == 0) {
+                boolean mouseOverExpander = isMouseOver(getPosition().x, getPosition().y + TITLE + height + 2, WIDTH, 4);
+                if (mouseOverExpander && getMouse().isLeftHeld()) {
                     setExpanding(true);
                 }
 
                 if (isExpanding()) {
-                    height = MathHelper.clamp((getMouse().getPosition().y - getPosition().y) - TITLE - 2, 0, 350);
+                    int newHeight = (int) ((getMouse().getPosition().y - getPosition().y) - TITLE - 2);
+                    height = MathHelper.clamp(newHeight, 0, 350);
+
+                    // Stop expanding if mouse is released
+                    if (!getMouse().isLeftHeld()) {
+                        setExpanding(false);
+                    }
                 }
             }
         }
+
 
         super.drawComponent();
 

@@ -91,7 +91,7 @@ public class FontManager extends Manager {
      * @return The current font
      */
     public String getFont() {
-        return font.getName();
+        return font != null ? font.getName() : Font.SANS_SERIF;
     }
 
     /**

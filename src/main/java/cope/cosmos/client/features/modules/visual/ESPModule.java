@@ -445,9 +445,8 @@ public class ESPModule extends Module {
                             }
 
                             // draw all storages
-                            for (TileEntity tileEntity : mc.world.loadedTileEntityList)
-
-                                // draw tile entity if valid
+                            for (TileEntity tileEntity : mc.world.loadedTileEntityList) {
+                                // Check if tileEntity is not null
                                 if (tileEntity != null && hasStorageHighlight(tileEntity)) {
 
                                     // get our render offsets.
@@ -455,9 +454,10 @@ public class ESPModule extends Module {
                                     double renderY = ((IRenderManager) mc.getRenderManager()).getRenderY();
                                     double renderZ = ((IRenderManager) mc.getRenderManager()).getRenderZ();
 
-                                    // render
+                                    // render tile entity
                                     TileEntityRendererDispatcher.instance.render(tileEntity, tileEntity.getPos().getX() - renderX, tileEntity.getPos().getY() - renderY, tileEntity.getPos().getZ() - renderZ, mc.getRenderPartialTicks());
                                 }
+                            }
                         } catch (Exception exception) {
 
                             // show error if dev mode
@@ -547,6 +547,7 @@ public class ESPModule extends Module {
             }
         }
     }
+
 
     @SubscribeEvent
     public void onRenderEntity(RenderLivingEntityEvent event) {

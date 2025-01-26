@@ -19,10 +19,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author linustouchtips
  * @since 02/25/2022
  */
-public class EntitySpeedModule extends Module {
+public class EntitySpeedModule extends Module
+{
     public static EntitySpeedModule INSTANCE;
 
-    public EntitySpeedModule() {
+    public EntitySpeedModule()
+    {
         super("EntitySpeed", Category.MOVEMENT, "Allows you to move faster while riding entities");
         INSTANCE = this;
     }
@@ -38,31 +40,37 @@ public class EntitySpeedModule extends Module {
             .setDescription("Remounts entities constantly");
 
     @Override
-    public void onUpdate() {
+    public void onUpdate()
+    {
 
         // make sure we are riding an entity
-        if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
+        if (mc.player.isRiding() && mc.player.getRidingEntity() != null)
+        {
 
             // keep yaw consistent
             mc.player.getRidingEntity().rotationYaw = mc.player.rotationYaw;
 
             // lololol
-            if (mc.player.getRidingEntity() instanceof EntityLlama) {
+            if (mc.player.getRidingEntity() instanceof EntityLlama)
+            {
                 ((EntityLlama) mc.player.getRidingEntity()).rotationYawHead = mc.player.rotationYawHead;
             }
 
             // make sure the entity is not in a liquid
-            if (mc.player.getRidingEntity().isInWater() || mc.player.getRidingEntity().isInLava()) {
+            if (mc.player.getRidingEntity().isInWater() || mc.player.getRidingEntity().isInLava())
+            {
                 return;
             }
 
             // make sure the entity is not in a web
-            if (((IEntity) mc.player.getRidingEntity()).getInWeb()) {
+            if (((IEntity) mc.player.getRidingEntity()).getInWeb())
+            {
                 return;
             }
 
             // make sure the entity can have speed applied
-            if (mc.player.getRidingEntity().fallDistance > 2) {
+            if (mc.player.getRidingEntity().fallDistance > 2)
+            {
                 return;
             }
 
@@ -72,33 +80,39 @@ public class EntitySpeedModule extends Module {
             float yaw = mc.player.rotationYaw;
 
             // remount
-            if (strict.getValue()) {
+            if (strict.getValue())
+            {
 
                 // send remount packets
-                if (!mc.gameSettings.keyBindSneak.isKeyDown()) {
+                if (!mc.gameSettings.keyBindSneak.isKeyDown())
+                {
                     mc.player.connection.sendPacket(new CPacketUseEntity(mc.player.getRidingEntity(), EnumHand.MAIN_HAND));
                 }
             }
 
             // prevent entity from moving into unloaded chunks
-            if (mc.world.getChunkFromChunkCoords((int) (mc.player.getRidingEntity().posX + mc.player.getRidingEntity().motionX) >> 4, (int) (mc.player.getRidingEntity().posZ + mc.player.getRidingEntity().motionX) >> 4) instanceof EmptyChunk) {
+            if (mc.world.getChunkFromChunkCoords((int) (mc.player.getRidingEntity().posX + mc.player.getRidingEntity().motionX) >> 4, (int) (mc.player.getRidingEntity().posZ + mc.player.getRidingEntity().motionX) >> 4) instanceof EmptyChunk)
+            {
                 mc.player.getRidingEntity().motionX = 0;
                 mc.player.getRidingEntity().motionZ = 0;
             }
 
-            else {
+            else
+            {
 
                 // our facing values, according to movement not rotations
                 double cos = Math.cos(Math.toRadians(yaw + 90));
                 double sin = Math.sin(Math.toRadians(yaw + 90));
 
                 // if we're not inputting any movements, then we shouldn't be adding any motion
-                if (!MotionUtil.isMoving()) {
+                if (!MotionUtil.isMoving())
+                {
                     mc.player.getRidingEntity().motionX = 0;
                     mc.player.getRidingEntity().motionZ = 0;
                 }
 
-                else {
+                else
+                {
 
                     // update the movements
                     mc.player.getRidingEntity().motionX = (forward * speed.getValue() * cos) + (strafe * speed.getValue() * sin);
@@ -109,35 +123,42 @@ public class EntitySpeedModule extends Module {
     }
 
     @SubscribeEvent
-    public void onPacketReceive(PacketEvent.PacketReceiveEvent event) {
+    public void onPacketReceive(PacketEvent.PacketReceiveEvent event)
+    {
 
-        if (nullCheck()) {
+        if (nullCheck())
+        {
 
-            // if the client is not done loading the surrounding terrain, DO NOT CANCEL MOVEMENT PACKETS!!!!
-            if (!((INetHandlerPlayClient) mc.player.connection).isDoneLoadingTerrain()) {
-                return;
-            }
+            // Check if player is riding an entity and the connection is ready
+            if (mc.player != null && mc.player.isRiding() && mc.player.getRidingEntity() != null)
+            {
 
-            // make sure we are riding an entity
-            if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
+                // if the client is not done loading the surrounding terrain, DO NOT CANCEL MOVEMENT PACKETS!!!!
+                if (!((INetHandlerPlayClient) mc.player.connection).isDoneLoadingTerrain())
+                {
+                    return;
+                }
 
                 // make sure we are not dismounting
-                if (!mc.gameSettings.keyBindSneak.isKeyDown()) {
+                if (!mc.gameSettings.keyBindSneak.isKeyDown())
+                {
 
                     // packet for server passenger updates
-                    if (event.getPacket() instanceof SPacketSetPassengers) {
-
+                    if (event.getPacket() instanceof SPacketSetPassengers)
+                    {
                         // cancel server passenger updates
-                        if (strict.getValue()) {
+                        if (strict.getValue())
+                        {
                             event.setCanceled(true);
                         }
                     }
 
                     // packet for rubberbands
-                    if (event.getPacket() instanceof SPacketPlayerPosLook) {
-
+                    if (event.getPacket() instanceof SPacketPlayerPosLook)
+                    {
                         // cancel rubberbands
-                        if (strict.getValue()) {
+                        if (strict.getValue())
+                        {
                             event.setCanceled(true);
                         }
                     }
@@ -145,4 +166,5 @@ public class EntitySpeedModule extends Module {
             }
         }
     }
+
 }
