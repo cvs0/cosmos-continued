@@ -110,7 +110,7 @@ public class WaypointsModule extends Module {
                     );
 
                     // draw info
-                    RenderUtil.drawNametag(coordinates.addVector(0, 2.6, 0), name + " [X: " + coordinates.x + ", Y: " + coordinates.y + ", Z: " + coordinates.z + "]");
+                    RenderUtil.drawNametag(coordinates.add(0, 2.6, 0), name + " [X: " + coordinates.x + ", Y: " + coordinates.y + ", Z: " + coordinates.z + "]");
                 }
             });
         }

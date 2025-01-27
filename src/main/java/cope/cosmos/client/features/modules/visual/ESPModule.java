@@ -1155,7 +1155,7 @@ public class ESPModule extends Module {
                 Vec3d d = from.subtract(to);
 
                 //set the position to be an interpolated value from `from` to `to`
-                intermediary = to.addVector(
+                intermediary = to.add(
                         d.x * ((timeDelta) / (fadeSpeed.getValue() * 1000)),
                         d.y * ((timeDelta) / (fadeSpeed.getValue() * 1000)),
                         d.z * ((timeDelta) / (fadeSpeed.getValue() * 1000))
@@ -1168,7 +1168,7 @@ public class ESPModule extends Module {
                 Vec3d d = to.subtract(from);
 
                 //set the position to be an interpolated value from `from` to `to`
-                intermediary = from.addVector(
+                intermediary = from.add(
                         d.x * ((timeDelta) / (fadeSpeed.getValue() * 1000)),
                         d.y * ((timeDelta) / (fadeSpeed.getValue() * 1000)),
                         d.z * ((timeDelta) / (fadeSpeed.getValue() * 1000))

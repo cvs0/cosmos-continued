@@ -48,7 +48,7 @@ public class EventManager extends Manager implements Wrapper {
 		if (event.getEntity().getEntityWorld().isRemote && event.getEntityLiving().equals(mc.player)) {
 
 			// runs on the entity update method
-			mc.mcProfiler.startSection("cosmos-update");
+			mc.profiler.startSection("cosmos-update");
 
 			// module onUpdate
 			for (Module module : getCosmos().getModuleManager().getAllModules()) {
@@ -93,7 +93,7 @@ public class EventManager extends Manager implements Wrapper {
 			}
 
 			// end section
-			mc.mcProfiler.endSection();
+			mc.profiler.endSection();
 		}
 	}
 
@@ -101,7 +101,7 @@ public class EventManager extends Manager implements Wrapper {
 	public void onTick(TickEvent.ClientTickEvent event) {
 
 		// runs on game (root) tick
-		mc.mcProfiler.startSection("cosmos-root-tick");
+		mc.profiler.startSection("cosmos-root-tick");
 
 		// module onTick
 		for (Module module : getCosmos().getModuleManager().getAllModules()) {
@@ -146,14 +146,14 @@ public class EventManager extends Manager implements Wrapper {
 		}
 
 		// end section
-		mc.mcProfiler.endSection();
+		mc.profiler.endSection();
 	}
 	
 	@SubscribeEvent
 	public void onRender2d(RenderGameOverlayEvent.Text event) {
 
 		// runs on every frame
-		mc.mcProfiler.startSection("cosmos-render-2D");
+		mc.profiler.startSection("cosmos-render-2D");
 
 		// module onRender2D
 		for (Module module : getCosmos().getModuleManager().getAllModules()) {
@@ -198,14 +198,14 @@ public class EventManager extends Manager implements Wrapper {
 		}
 
 		// end section
-		mc.mcProfiler.endSection();
+		mc.profiler.endSection();
 	}
 	
 	@SubscribeEvent
 	public void onRender3D(RenderWorldLastEvent event) {
 
 		// runs on every frame
-		mc.mcProfiler.startSection("cosmos-render-3D");
+		mc.profiler.startSection("cosmos-render-3D");
 
 		// module onRender3D
 		for (Module module : getCosmos().getModuleManager().getAllModules()) {
@@ -250,7 +250,7 @@ public class EventManager extends Manager implements Wrapper {
 		}
 
 		// end section
-		mc.mcProfiler.endSection();
+		mc.profiler.endSection();
 	}
 
 	// **************************** EVENTS ****************************

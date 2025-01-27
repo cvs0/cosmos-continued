@@ -13,17 +13,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
+import static cope.cosmos.util.Wrapper.mc;
+
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
-
-    @Shadow
-    @Nullable
-    public GuiScreen currentScreen;
-
     @Inject(method = "displayGuiScreen", at = @At("HEAD"), cancellable = true)
     public void displayGuiScreen(GuiScreen scr, CallbackInfo info) {
         if (scr == null) {
-            Cosmos.EVENT_BUS.post(new GuiScreenClosedEvent(currentScreen));
+            Cosmos.EVENT_BUS.post(new GuiScreenClosedEvent(mc.currentScreen));
         }
     }
 

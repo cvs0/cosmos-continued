@@ -99,7 +99,7 @@ public class InteractionManager extends Manager {
             }
 
             if (interactVector == null) {
-                interactVector = new Vec3d(directionOffset).addVector(0.5, 0.5, 0.5);
+                interactVector = new Vec3d(directionOffset).add(0.5, 0.5, 0.5);
                 rotation = AngleUtil.calculateAngles(interactVector);
             }
 
@@ -269,7 +269,7 @@ public class InteractionManager extends Manager {
             }
 
             if (interactVector == null) {
-                interactVector = new Vec3d(directionOffset).addVector(0.5, 0.5, 0.5);
+                interactVector = new Vec3d(directionOffset).add(0.5, 0.5, 0.5);
             }
 
             // Rotation oldRotation = getCosmos().getRotationManager().getServerRotation();
@@ -438,7 +438,7 @@ public class InteractionManager extends Manager {
 
         return mc.world.rayTraceBlocks(
                 eyes,
-                eyes.addVector(rotationVector.x * distance, rotationVector.y * distance, rotationVector.z * distance),
+                eyes.add(rotationVector.x * distance, rotationVector.y * distance, rotationVector.z * distance),
                 false,
                 false,
                 true
@@ -454,9 +454,9 @@ public class InteractionManager extends Manager {
 
         // get the difference between the position and facing
         Vec3d diff = new Vec3d(
-                pos.getX() + 0.5 - x + facing.getFrontOffsetX() / 2.0,
+                pos.getX() + 0.5 - x + facing.getYOffset() / 2.0,
                 pos.getY() + 0.5,
-                pos.getZ() + 0.5 - z + facing.getFrontOffsetZ() / 2.0
+                pos.getZ() + 0.5 - z + facing.getZOffset() / 2.0
         );
 
         // find the distance between two points
@@ -487,7 +487,7 @@ public class InteractionManager extends Manager {
         List<EnumFacing> visibleSides = new ArrayList<>();
 
         // pos vector
-        Vec3d positionVector = new Vec3d(position).addVector(0.5, 0.5, 0.5);
+        Vec3d positionVector = new Vec3d(position).add(0.5, 0.5, 0.5);
 
         // facing
         double facingX = mc.player.getPositionEyes(1).x - positionVector.x;

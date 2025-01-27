@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BlockSoulSand.class)
 public class MixinBlockSoulSand {
 
-    @Inject(method = "onEntityCollidedWithBlock", at = @At("HEAD"), cancellable = true)
-    public void onEntityCollidedWithBlock(World world, BlockPos blockPos, IBlockState iBlockState, Entity entity, CallbackInfo info) {
+    @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
+    public void onEntityCollision(World world, BlockPos blockPos, IBlockState iBlockState, Entity entity, CallbackInfo info) {
         SoulSandEvent soulSandEvent = new SoulSandEvent();
         Cosmos.EVENT_BUS.post(soulSandEvent);
 

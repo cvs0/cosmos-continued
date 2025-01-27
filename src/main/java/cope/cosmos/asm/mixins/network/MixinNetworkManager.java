@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = NetworkManager.class)
 public class MixinNetworkManager {
 
-    @Inject(method = "checkDisconnected", at = @At("HEAD"))
+    @Inject(method = "handleDisconnection", at = @At("HEAD"))
     public void onDisconnect(CallbackInfo info) {
         DisconnectEvent disconnectEvent = new DisconnectEvent();
         Cosmos.EVENT_BUS.post(disconnectEvent);

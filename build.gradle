@@ -1,5 +1,6 @@
 /**
  * This is the best Gradle in anarchy
+ *
  * @author bush, perry
  */
 //file:noinspection GroovyAssignabilityCheck I don't like warnings!!!!
@@ -8,21 +9,29 @@ buildscript {
     repositories {
         // The mavenCentral() alias means that dependencies are fetched from the central Maven 2 repository (https://repo1.maven.org/maven2).
         mavenCentral()
-        // The url to get the spongepowered dependencies from.
-        maven { url 'https://repo.spongepowered.org/maven' }
-        // The url to get the forge dependencies from.
-        maven { url 'https://files.minecraftforge.net/maven' }
+
+        maven {
+            name = 'forge'
+            url = 'https://files.minecraftforge.net/maven'
+        }
+
+        maven {
+            name = 'SpongePowered'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
     }
     dependencies {
         // Latest 2 version of ForgeGradle will update to 5.1.26 later. Versions list: https://maven.minecraftforge.net/net/minecraftforge/gradle/ForgeGradle/maven-metadata.xml
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3.4'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
         // Upgrade to 0.7-SNAPSHOT when upgrading ForgeGradle to 3.0+ & mixin ver at dependencies has to be 0.8+ for upgrading mixingradle ver. https://github.com/SpongePowered/MixinGradle
-        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 
+apply plugin: 'idea'
+apply plugin: 'eclipse'
 // Gradle plugin for all Minecraft mod development needs.
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 // Gradle plugin. Mixin is a trait/mixin & bytecode weaving framework for Java using ASM.
 apply plugin: 'org.spongepowered.mixin'
 // Only edit below this line, the above code adds & enables the necessary things for Forge to be setup.
@@ -44,38 +53,35 @@ compileJava {
 }
 
 minecraft {
-    // The version of forge & if u want to update to the patch 1.12.2-14.23.5.2860 for log4j exploit u need to have ForgeGradle 3+ version.
-    version = mcforgeversion
-    // The directory of where the files that are output when doing runClient will be put.
-    runDir = 'run'
-    // MCP Mapping version.
-    mappings = mappingsversion
-    // An Srg named sources jar is made by default. No point for it aka bloat so it has been disabled.
-    makeObfSourceJar = false
-    // Tells FML to load our mixin loader in IDE's.
-    clientJvmArgs += '-Dfml.coreMods.load=' + mixinclass
-    // Tells mixin to use our mixin config in IDE's.
-    clientRunArgs += '--mixin ' + mixinconfig
-}
+    mappings channel: 'stable', version: '39-1.12'
 
-mixin {
-    // The obfuscation environment to use when generating refMaps. This is the obfuscation which will end up in the mappings in the generated refMap.
-    defaultObfuscationEnv searge // Types of obf env: searge, notch.
-    // Sets the main sourceSets refmap name instead of add sourceSets.main so there is no conflict cause of it adding another value instead of setting the 1 value.
-    sourceSets {
-        main {
-            ext.refMap = 'mixins.cosmos.refmap.json'
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'fml.coreMods.load', 'cope.cosmos.asm.MixinLoader'
+            property 'mixin.env.disableRefMap', 'true'
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
         }
     }
 }
 
 repositories {
-    // The mavenCentral() alias means that dependencies are fetched from the central Maven 2 repository (https://repo1.maven.org/maven2).
-    mavenCentral()
     // The url to get the spongepowered dependencies from.
     maven { url 'https://repo.spongepowered.org/maven' }
     // The url to get GitHub repositories from
     maven { url 'https://jitpack.io' }
+    maven {
+        name = 'spongepowered-repo'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+    maven {
+        name = 'swt-repo'
+        url = "https://maven-eclipse.github.io/maven"
+    }
+    mavenCentral()
 }
 
 configurations {
@@ -85,68 +91,88 @@ configurations {
     compile.extendsFrom embed
 }
 
-dependencies {
-    implementation 'org.jetbrains:annotations:19.0.0'
-
-    // Upgrading to 0.8+ can possibly break compatibility with other clients like Future/RusherHack.
-    embed('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
-        // Excludes unneeded stuff.
-        exclude module: 'launchwrapper'
-        exclude module: 'guava'
-        exclude module: 'gson'
-        exclude module: 'commons-io'
-        exclude module: 'log4j-core'
+configurations {
+    jarLibs
+    all {
+        resolutionStrategy {
+            force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+        }
     }
-    // Compiles the library needed for Discord RPC's and grabs the actual disc dlls from the disc repo and puts it in so can't say the disc dlls are rats lel.
-    embed('club.minnced:java-discord-rpc:2.0.2') {
-        // For no reason it includes the com.sun.jna library.
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+
+    jarLibs('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        exclude module: 'commons-io'
+        exclude module: 'gson'
+        exclude module: 'guava'
+        exclude module: 'launchwrapper'
+        exclude module: 'log4j-core' // we want to exclude this as well because 0.7.11 includes it too new for MC
+    }
+
+    annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
+        exclude module: 'gson'
+    }
+
+    jarLibs('org.reflections:reflections:0.9.12') {
+        exclude module: 'gson'
+        exclude module: 'guava'
+    }
+
+    jarLibs('club.minnced:java-discord-rpc:2.0.2') {
         exclude module: 'jna'
     }
+
+
     // File reader.
-    embed ('com.moandjiezana.toml:toml4j:0.7.2') {
+    jarLibs ('com.moandjiezana.toml:toml4j:0.7.2') {
         // Why include google gson.
         exclude module: 'gson'
     }
     // Microsoft Authentication
     embed 'com.github.litarvan:OpenAuth:1.1.2'
+
+    compileOnly 'org.jetbrains:annotations:20.1.0'
+
+    implementation configurations.jarLibs
+}
+
+mixin {
+    defaultObfuscationEnv 'searge' // Types of obf env: searge, notch.
+    sourceSets {
+        main {
+            ext.refMap = 'mixins.cosmos.refmap.json'
+        }
+    }
 }
 
 processResources {
-    // This will ensure that this task is redone when the versions change.
     inputs.property 'version', project.version
-    // Replace stuff in mcmod.info, Nothing else.
+
+    exclude '**/rawimagefiles'
+
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        // Replace version.
         expand 'version': project.version
-    }
-    // Copy everything else except the mcmod.info.
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
     }
 }
 
 jar {
-    from(configurations.embed.collect {
-        it.isDirectory() ? it : zipTree(it)
-    }) {
-        // Excludes/Removes useless bloat files from the compiled jar.
-        exclude 'dummyThing',
-                'LICENSE.txt',
-                'META-INF/MUMFREY.RSA',
-                'META-INF/maven/**',
-                'org/**/*.html'
-    }
     manifest.attributes(
-            // Name for the clients mixins.json.
-            'MixinConfigs': mixinconfig,
-            // Directory for the org library mixin loader.
+            'Manifest-Version': 1.0,
+            'MixinConfigs': 'mixins.cosmos.json',
             'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-            // Actually not too sure what this is for.
             'TweakOrder': 0,
-            // Directory for the mixin loader for the built jar.
-            'FMLCorePlugin': mixinclass,
-            // Turn this to false for the client to be able to load in a IDE.
-            'ForceLoadAsMod': 'true'
+            'FMLCorePluginContainsFMLMod': 'true',
+            'FMLCorePlugin': 'cope.cosmos.asm.MixinLoader',
+            'ForceLoadAsMod': 'true',
+            'Main-Class': 'cope.cosmos.client.Cosmos'
     )
+
+    from {
+        configurations.jarLibs.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }

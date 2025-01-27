@@ -211,7 +211,7 @@ public class ScaffoldModule extends Module {
     private Vec3d getHitVec(Pair<BlockPos, EnumFacing> in) {
         return new Vec3d(in.first()
                 .offset(in.second()))
-                .addVector(0.5, 0.5, 0.5)
+                .add(0.5, 0.5, 0.5)
                 .add(new Vec3d(in.second().getOpposite().getDirectionVec())
                         .scale(0.5));
     }

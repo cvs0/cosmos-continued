@@ -616,7 +616,7 @@ public class AutoCrystalModule extends ServiceModule<EntityEnderCrystal> {
                 if (placeClearance || delayed) {
 
                     // face the placement
-                    angleVector = Pair.of(new Vec3d(placement.getDamageSource()).addVector(0.5, 0.5, 0.5), YawStep.NONE);
+                    angleVector = Pair.of(new Vec3d(placement.getDamageSource()).add(0.5, 0.5, 0.5), YawStep.NONE);
 
                     // place the crystal
                     if (placeCrystal(placement.getDamageSource())) {
@@ -928,7 +928,7 @@ public class AutoCrystalModule extends ServiceModule<EntityEnderCrystal> {
                 if (placement != null) {
 
                     // face the placement
-                    angleVector = Pair.of(new Vec3d(placement.getDamageSource()).addVector(0.5, 0.5, 0.5), YawStep.NONE);
+                    angleVector = Pair.of(new Vec3d(placement.getDamageSource()).add(0.5, 0.5, 0.5), YawStep.NONE);
 
                     // place the crystal
                     if (placeCrystal(placement.getDamageSource())) {
@@ -1421,7 +1421,7 @@ public class AutoCrystalModule extends ServiceModule<EntityEnderCrystal> {
                 }
 
                 // local damage done by the placement
-                double localDamage = ExplosionUtil.getDamageFromExplosion(mc.player, new Vec3d(position).addVector(0.5, 1, 0.5), blockDestruction.getValue());
+                double localDamage = ExplosionUtil.getDamageFromExplosion(mc.player, new Vec3d(position).add(0.5, 1, 0.5), blockDestruction.getValue());
 
                 // search all targets
                 for (Entity entity : new ArrayList<>(mc.world.loadedEntityList)) {
@@ -1455,7 +1455,7 @@ public class AutoCrystalModule extends ServiceModule<EntityEnderCrystal> {
                     }
 
                     // target damage done by the placement
-                    double targetDamage = ExplosionUtil.getDamageFromExplosion(entity, new Vec3d(position).addVector(0.5, 1, 0.5), blockDestruction.getValue());
+                    double targetDamage = ExplosionUtil.getDamageFromExplosion(entity, new Vec3d(position).add(0.5, 1, 0.5), blockDestruction.getValue());
 
                     // check the safety of the placement
                     double safetyIndex = 1;
@@ -1860,7 +1860,7 @@ public class AutoCrystalModule extends ServiceModule<EntityEnderCrystal> {
         Vec3d placeVector = AngleUtil.getVectorForRotation(new Rotation(vectorAngles.getYaw(), vectorAngles.getPitch()));
 
         // interact vector
-        RayTraceResult interactVector = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1), mc.player.getPositionEyes(1).addVector(placeVector.x * placeRange.getValue(), placeVector.y * placeRange.getValue(), placeVector.z * placeRange.getValue()), false, false, true);
+        RayTraceResult interactVector = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1), mc.player.getPositionEyes(1).add(placeVector.x * placeRange.getValue(), placeVector.y * placeRange.getValue(), placeVector.z * placeRange.getValue()), false, false, true);
 
         // make sure the direction we are facing is consistent with our rotations
         switch (interact.getValue()) {
@@ -1873,7 +1873,7 @@ public class AutoCrystalModule extends ServiceModule<EntityEnderCrystal> {
             case VANILLA:
 
                 // find the direction to place against
-                RayTraceResult laxResult = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1), new Vec3d(in).addVector(0.5, 0.5, 0.5));
+                RayTraceResult laxResult = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1), new Vec3d(in).add(0.5, 0.5, 0.5));
 
                 if (laxResult != null && laxResult.typeOfHit.equals(Type.BLOCK)) {
                     facingDirection = laxResult.sideHit;
@@ -1906,7 +1906,7 @@ public class AutoCrystalModule extends ServiceModule<EntityEnderCrystal> {
                             for (float z = 0; z <= 1; z += 0.05) {
 
                                 // find the vector to raytrace to
-                                Vec3d traceVector = new Vec3d(in).addVector(x, y, z);
+                                Vec3d traceVector = new Vec3d(in).add(x, y, z);
 
                                 // distance to face
                                 double directionDistance = mc.player.getDistance(traceVector.x, traceVector.y, traceVector.z);

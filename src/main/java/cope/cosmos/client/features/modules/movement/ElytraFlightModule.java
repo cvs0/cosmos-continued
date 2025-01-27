@@ -254,7 +254,7 @@ public class ElytraFlightModule extends Module {
                                     float pitchScaled = pitch * 0.017453292F;
                                     double rotationDistance = Math.sqrt(rotations.x * rotations.x + rotations.z * rotations.z);
                                     double distance = Math.sqrt(mc.player.motionX * mc.player.motionX + mc.player.motionZ * mc.player.motionZ);
-                                    double length = rotations.lengthVector();
+                                    double length = rotations.length();
                                     float pitchCos = MathHelper.cos(pitchScaled);
                                     pitchCos = (float) ((double) pitchCos * (double) pitchCos * Math.min(1, length / 0.4D));
 
@@ -380,7 +380,7 @@ public class ElytraFlightModule extends Module {
                     float pitchScaled = mc.player.rotationPitch * 0.017453292F;
                     double rotationDistance = Math.sqrt(rotations.x * rotations.x + rotations.z * rotations.z);
                     double distance = Math.sqrt(mc.player.motionX * mc.player.motionX + mc.player.motionZ * mc.player.motionZ);
-                    double length = rotations.lengthVector();
+                    double length = rotations.length();
                     float pitchCos = MathHelper.cos(pitchScaled);
                     pitchCos = (float) ((double) pitchCos * (double) pitchCos * Math.min(1, length / 0.4D));
 
@@ -449,7 +449,7 @@ public class ElytraFlightModule extends Module {
                     float pitchScaled = mc.player.rotationPitch * 0.017453292F;
                     double rotationDistance = Math.sqrt(rotations.x * rotations.x + rotations.z * rotations.z);
                     double distance = Math.sqrt(mc.player.motionX * mc.player.motionX + mc.player.motionZ * mc.player.motionZ);
-                    double length = rotations.lengthVector();
+                    double length = rotations.length();
                     float pitchCos = MathHelper.cos(pitchScaled);
                     pitchCos = (float) ((double) pitchCos * (double) pitchCos * Math.min(1, length / 0.4D));
 
@@ -537,7 +537,7 @@ public class ElytraFlightModule extends Module {
 
                     // total slowdown factor
                     double netSlowdown = slowdown.lengthSquared();
-                    double netSlowdownSqrt = slowdown.lengthVector();
+                    double netSlowdownSqrt = slowdown.length();
 
                     // update motion
                     if (netSlowdown >= 1.0E-4F || netSlowdownSqrt == 1) {

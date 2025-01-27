@@ -91,7 +91,7 @@ public class EntitySpeedModule extends Module
             }
 
             // prevent entity from moving into unloaded chunks
-            if (mc.world.getChunkFromChunkCoords((int) (mc.player.getRidingEntity().posX + mc.player.getRidingEntity().motionX) >> 4, (int) (mc.player.getRidingEntity().posZ + mc.player.getRidingEntity().motionX) >> 4) instanceof EmptyChunk)
+            if (mc.world.getChunk((int) (mc.player.getRidingEntity().posX + mc.player.getRidingEntity().motionX) >> 4, (int) (mc.player.getRidingEntity().posZ + mc.player.getRidingEntity().motionX) >> 4) instanceof EmptyChunk)
             {
                 mc.player.getRidingEntity().motionX = 0;
                 mc.player.getRidingEntity().motionZ = 0;

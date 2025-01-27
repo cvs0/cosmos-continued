@@ -92,7 +92,7 @@ public class TracersModule extends Module {
         Vec3d eyes = new Vec3d(0, 0, 1)
                 .rotatePitch(-((float) Math.toRadians(mc.player.rotationPitch))) // Rotate pitch
                 .rotateYaw(-((float) Math.toRadians(mc.player.rotationYaw))) // Rotate yaw
-                .addVector(0, mc.player.getEyeHeight(), 0); // Add player's eye height
+                .add(0, mc.player.getEyeHeight(), 0); // Add player's eye height
 
         // draw line
         RenderUtil.drawLine3D(eyes, vecTo, lineColor, lineWidth);
