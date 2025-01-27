@@ -20,10 +20,13 @@ import cope.cosmos.util.holder.Rotation;
 import cope.cosmos.util.player.AngleUtil;
 import cope.cosmos.util.player.MotionUtil;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -46,7 +49,7 @@ public class FreecamModule extends Module {
 
     // **************************** general ****************************
 
-    public static Setting<Mode> mode = new Setting<>("Mode", Mode.CAMERA)
+    public static Setting<Mode> mode = new Setting<>("Mode", Mode.NORMAL)
             .setAlias("M", "Type")
             .setDescription("The type of freecam");
 
@@ -188,6 +191,7 @@ public class FreecamModule extends Module {
 
         // sync server model
         if (playerModel != null) {
+            playerModel.addPotionEffect(new PotionEffect(Potion.getPotionById(14), Integer.MAX_VALUE, 0, false, false));
             playerModel.motionX = mc.player.motionX;
             playerModel.motionY = mc.player.motionY;
             playerModel.motionZ = mc.player.motionZ;

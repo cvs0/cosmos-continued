@@ -410,44 +410,50 @@ public class RenderUtil implements Wrapper {
 	}
 
 	public static void drawLine3D(Vec3d from, Vec3d to, Color color, double lineWidth) {
-
 		// Enable depth
 		glDepthMask(false);
 		glDisable(GL_DEPTH_TEST);
 
-		glDisable(GL_ALPHA_TEST);
-		glEnable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// Ensure line stippling is disabled to avoid dashed lines
+		glDisable(GL_LINE_STIPPLE);
+
+		// Enable smooth lines but sometimes disable it to check if it helps
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-		glLineWidth(0.1F);
 
-		// Colour line
+		// Enable blending for transparency
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Disable texture mapping
+		glDisable(GL_TEXTURE_2D);
+
+		// Set line width (check if it's clamped)
+		glLineWidth((float) lineWidth);
+
+		// Colour line (normalize to [0,1] range)
 		glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, color.getAlpha() / 255F);
 
-		// Set line width
-		glLineWidth((float) lineWidth);
-		glBegin(GL_CURRENT_BIT);
-
 		// Draw line
+		glBegin(GL_LINES);  // Use GL_LINES for drawing solid lines
 		glVertex3d(from.x, from.y, from.z);
 		glVertex3d(to.x, to.y, to.z);
-
 		glEnd();
 
-		// Disable depth
+		// Disable anti-aliasing for lines (if you're experimenting)
+		glDisable(GL_LINE_SMOOTH);
+
+		// Reset OpenGL settings
 		glDepthMask(true);
 		glEnable(GL_DEPTH_TEST);
 
 		glEnable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
-		glEnable(GL_ALPHA_TEST);
-		glDisable(GL_LINE_SMOOTH);
 
 		// Reset colour
 		glColor4f(1, 1, 1, 1);
 	}
+
 
 	// ********************************** 2d ************************************** //
 
