@@ -113,6 +113,7 @@ public class ModuleManager extends Manager {
 				new TracersModule(),
 				new ViewModelModule(),
 				new WaypointsModule(),
+				new Xray(),
 
 				// world
 				new AvoidModule(),
@@ -121,7 +122,6 @@ public class ModuleManager extends Manager {
 				new MultiTaskModule(),
 				new ScaffoldModule(),
 				new SpeedMineModule(),
-				new WallhackModule(),
 
 				// client
 				new ClickGUIModule(),

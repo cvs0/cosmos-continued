@@ -77,6 +77,8 @@
         "render.tile.MixinTileEntityRenderDispatcher",
         "world.MixinWorld",
         "world.block.MixinBlock",
+        "world.block.MixinBlockModelRenderer",
+        "world.block.MixinBlockFluidRenderer",
         "world.block.MixinBlockLiquid",
         "world.block.MixinBlockSlime",
         "world.block.MixinBlockSoulSand",

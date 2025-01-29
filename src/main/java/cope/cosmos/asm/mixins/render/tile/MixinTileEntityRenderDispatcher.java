@@ -2,6 +2,7 @@ package cope.cosmos.asm.mixins.render.tile;
 
 import cope.cosmos.client.Cosmos;
 import cope.cosmos.client.events.render.entity.tile.RenderTileEntityEvent;
+import cope.cosmos.client.features.modules.visual.Xray;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +17,13 @@ public class MixinTileEntityRenderDispatcher {
 
     @Shadow
     private Tessellator batchBuffer;
+
+    @Inject(method = "render(Lnet/minecraft/tileentity/TileEntity;FI)V", at = @At("HEAD"), cancellable = true)
+    public void render(TileEntity tileEntityIn, float partialTicks, int destroyStage, CallbackInfo ci) {
+        if (Xray.shouldReplace(tileEntityIn.getBlockType().getDefaultState())) {
+            ci.cancel();
+        }
+    }
 
     @Inject(method = "render(Lnet/minecraft/tileentity/TileEntity;DDDFIF)V", at = @At("RETURN"), cancellable = true)
     public void render(TileEntity tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage, float p_192854_10_, CallbackInfo info) {

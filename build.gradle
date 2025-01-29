@@ -126,10 +126,8 @@ dependencies {
 
 
     // File reader.
-    jarLibs ('com.moandjiezana.toml:toml4j:0.7.2') {
-        // Why include google gson.
-        exclude module: 'gson'
-    }
+    jarLibs('com.moandjiezana.toml:toml4j:0.7.2')
+
     // Microsoft Authentication
     embed 'com.github.litarvan:OpenAuth:1.1.2'
 
